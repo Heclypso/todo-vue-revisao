@@ -23,41 +23,41 @@ tarefas: [
 ]
 })
 
-const getTarefasPendentes = () => {
-  return estado.tarefas.filter(tarefa => !tarefa.finalizada)
-}
+const getTarefasPendentes = () => estado.tarefas.filter(tarefa => !tarefa.finalizada)
 
-const getTarefasFinalizadas = () => {
-  return estado.tarefas.filter(tarefa => tarefa.finalizada)
-}
+const getTarefasFinalizadas = () => estado.tarefas.filter(tarefa => tarefa.finalizada)
 
 const getTarefasFiltradas = () => {
-  const { filtro } = estado;
+  const { filtro, tarefas } = estado;
 
   switch(filtro) {
     case'pendentes': 
       return getTarefasPendentes();
+
     case'finalizadas': 
       return getTarefasFinalizadas();
+      
     default:
-      return estado.tarefas
+      return tarefas
   }
 }
 
 const cadastraTarefa = () => {
+  let { tarefaTemp, tarefas}  = estado;
+
   const tarefaNova = {
-    titulo: estado.tarefaTemp,
+    titulo: tarefaTemp,
     finalizada: false,
   }
-  estado.tarefas.push(tarefaNova);
-  estado.tarefaTemp = '';
+  tarefas.push(tarefaNova);
+  tarefaTemp = '';
 }
 </script>
 
 <template>
   <div class="container">
     <Cabecalho :tarefas-pendentes="getTarefasPendentes().length" />
-    <Formulario :tarefa-temp="estado.tarefaTemp" :edita-tarefa-temp="evento => estado.tarefaTemp = evento.target.value" :cadastra-tarefa="cadastraTarefa" :trocar-filtro="evento => estado.filtro = evento.target.value" />
+    <Formulario :tarefa-temp="estado.tarefaTemp" :edita-tarefa-temp="evento => estado.tarefaTemp = evento.target.value" :cadastra-tarefa="cadastraTarefa" :trocar-filtro="evento => estado.filtro = evento.target.value" /> 
     <ListaDeTarefas v-if="getTarefasPendentes().length > 0" :tarefas="getTarefasFiltradas()" />
     <p class="mt-3" v-else="">Não existem tarefas pendentes</p>
   </div>
